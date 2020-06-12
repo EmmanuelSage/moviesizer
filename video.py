@@ -1,12 +1,43 @@
 from moviepy.video.io.VideoFileClip import VideoFileClip
+from pathlib import Path
 
-print("Notice: Enter the address :")
+def getDuration(path):
+    clip = VideoFileClip(path)
+    dur = int(clip.duration)
+    return dur
 
-clip = VideoFileClip(input("Enter the video filename (with extn.): "))
-dur = int(clip.duration)
-hrs, mins, secs = dur//60//60, dur//60%60, dur%60
-hrs = "0"+str(hrs) if(hrs<10) else str(hrs)
-mins = "0"+str(mins) if(mins<10) else str(mins)
-secs = "0"+str(secs) if(secs<10) else str(secs)
+def processDuration(dur):
+    hrs, mins, secs = dur//60//60, dur//60%60, dur%60
+    hrs = "0"+str(hrs) if(hrs<10) else str(hrs)
+    mins = "0"+str(mins) if(mins<10) else str(mins)
+    secs = "0"+str(secs) if(secs<10) else str(secs)
 
-print("Length of the video: "+ hrs +":"+ mins +":"+ secs)
+    print("Length of the video: "+ hrs +":"+ mins +":"+ secs)
+    print("Full duration of the video: " + str(dur))
+
+
+
+def getVideosLength():
+    pathlist = Path(input("Enter the video filename (with extn.): ")).glob('**/*.mp4')
+
+    print("Processing directories ............")
+
+    duration = 0
+
+    for path in pathlist:
+        # because path is object not string
+        path_in_str = str(path)
+        duration += getDuration(path_in_str)
+        print("Current Duration is : ", duration)
+
+    print("Directories processed :)")
+    print("returning result ........")
+
+    processDuration(duration)
+
+getVideosLength()
+
+# Todo : Add doc strings
+# Todo : Sanitize input
+# Todo : add try catch and error handling
+# Todo : fix error (Exception ignored in: <function FFMPEG_AudioReader.__del__ at 0x081646A8>)
